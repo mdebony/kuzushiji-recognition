@@ -56,7 +56,7 @@ def createDatasetSecondNetwork(inputFile, outputFile, imageRep='../data/train_im
     imageCaracList = []
     caracList = []
     
-    print('Convert train image')
+    print('Convert train image', flush=True)
     for j in tqdm(range(0, nImage)):
         idImage = data['image_id'].iloc[j]
         label = data['labels'].iloc[j]
@@ -68,12 +68,15 @@ def createDatasetSecondNetwork(inputFile, outputFile, imageRep='../data/train_im
     caracList = np.asarray(caracList)
     imageCaracList = np.asarray(imageCaracList, dtype=np.uint8)
     
-    print('Create character table')
-    charTable = np.zeros((imageCaracList.shape[0], len(unicodeData)), dtype=np.bool)    
+    print('Create character table', flush=True)
+    charTable = np.zeros((imageCaracList.shape[0], len(unicodeData)), dtype=np.bool)
+    charClass = np.zeros((imageCaracList.shape[0]), dtype=np.int16)
     for i in tqdm(range(imageCaracList.shape[0])):
-        charTable[i, unicodeData[unicodeData['char']==caracList[i]].index.values.astype(int)[0]] = True
+        charClass[i] = unicodeData[unicodeData['char']==caracList[i]].index.values.astype(int)[0]
+        charTable[i, charClass[i]] = True
     
-    np.savez_compressed(outputFile, character = caracList, characterMap = charTable, image = imageCaracList)
+    np.savez_compressed(outputFile, character = caracList, characterMap = charTable, characterClass = charClass, image = imageCaracList)
     del imageCaracList
     del caracList
     del charTable
+    del charClass
