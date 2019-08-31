@@ -1,7 +1,11 @@
 import pandas as pd
-from script.imageManipulation import convertImage, extractSImageFromImage
+import numpy as np
+from PIL import Image
+from imageManipulation import convertImage, extractSImageFromImage
+from progressBar import update_progress
+from tqdm import tqdm
 
-def createCaracDatabase(label):
+def createCaracDatabase(label, unicodeData):
     carac = []
     pos = []
     size = []
@@ -15,8 +19,8 @@ def createCaracDatabase(label):
     return pd.DataFrame(list(zip(carac, pos, size)), columns=['caracter', 'position', 'size'])
 
 
-def fromPageCreateCaracterDataset(image, label):
-    caracDB = createCaracDatabase(label)
+def fromPageCreateCaracterDataset(image, label, unicodeData):
+    caracDB = createCaracDatabase(label, unicodeData)
     imageCaracList = []
     caracList = []
     for i in range(0, len(caracDB)):
@@ -44,26 +48,32 @@ def createDatasetFirstNetwork(xpixel=1024, ypixel=1024, gray=False):
         image.save(datasetRep+'train/'+idImage+'.jpg')
         
 
-def createDatasetSecondNetwork(inputFile, outputFile):
+def createDatasetSecondNetwork(inputFile, outputFile, imageRep='../data/train_images/', unicodeFile = '../data/unicode_translation.csv'):
     data = pd.read_csv(inputFile)
+    unicodeData = pd.read_csv(unicodeFile)
     
     nImage = data.shape[0]
     imageCaracList = []
     caracList = []
     
     print('Convert train image')
-    print('\n')
-    for j in range(0, nImage):
-        update_progress(float(j+1)/float(nImage))
+    for j in tqdm(range(0, nImage)):
         idImage = data['image_id'].iloc[j]
         label = data['labels'].iloc[j]
-        image = Image.open(dataRep+'train_images/'+idImage+'.jpg')
-        tmp1, tmp2 = fromPageCreateCaracterDataset(image, label)
+        image = Image.open(imageRep+idImage+'.jpg')
+        tmp1, tmp2 = fromPageCreateCaracterDataset(image, label, unicodeData)
         caracList += tmp1
         imageCaracList += tmp2
         
     caracList = np.asarray(caracList)
     imageCaracList = np.asarray(imageCaracList, dtype=np.uint8)
-    np.savez_compressed(outputFile, caracter = caracList, image = imageCaracList)
+    
+    print('Create character table')
+    charTable = np.zeros((imageCaracList.shape[0], len(unicodeData)), dtype=np.bool)    
+    for i in tqdm(range(imageCaracList.shape[0])):
+        charTable[i, unicodeData[unicodeData['char']==caracList[i]].index.values.astype(int)[0]] = True
+    
+    np.savez_compressed(outputFile, character = caracList, characterMap = charTable, image = imageCaracList)
     del imageCaracList
     del caracList
+    del charTable
