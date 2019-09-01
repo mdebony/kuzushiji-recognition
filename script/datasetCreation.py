@@ -73,10 +73,8 @@ def createDatasetSecondNetwork(inputFile, outputFile, imageRep='../data/train_im
     charClass = np.zeros((imageCaracList.shape[0]), dtype=np.int16)
     for i in tqdm(range(imageCaracList.shape[0])):
         charClass[i] = unicodeData[unicodeData['char']==caracList[i]].index.values.astype(int)[0]
-        charTable[i, charClass[i]] = True
     
-    np.savez_compressed(outputFile, character = caracList, characterMap = charTable, characterClass = charClass, image = imageCaracList)
+    np.savez_compressed(outputFile, character = caracList, characterClass = charClass, image = imageCaracList)
     del imageCaracList
     del caracList
-    del charTable
     del charClass
