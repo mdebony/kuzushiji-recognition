@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 from PIL import Image
 from .imageManipulation import convertImage, extractSImageFromImage
-from progressBar import update_progress
 from tqdm import tqdm
 
 def createCaracDatabase(label, unicodeData):
@@ -42,7 +41,6 @@ def createDatasetFirstNetwork(xpixel=1024, ypixel=1024, gray=False):
     print('\n')
     for idImage in trainData['image_id']:
         i+=1
-        update_progress(float(i)/float(nImage))
         image = Image.open(dataRep+'train_images/'+idImage+'.jpg')
         image = convertImage(image,xpixel, ypixel, gray)
         image.save(datasetRep+'train/'+idImage+'.jpg')
