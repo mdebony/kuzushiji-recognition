@@ -43,3 +43,8 @@ def convertImage(image, xpixel=1024, ypixel=1024, gray=False, squared=True, squa
 def extractSImageFromImage(image, pos, size, finalSize=(32,32), gray=False):
     box = (pos[0], pos[1], pos[0]+size[0], pos[1]+size[1])
     return convertImage(image.copy().crop(box), xpixel=finalSize[0], ypixel=finalSize[0], gray=gray)
+
+def conversionToInitialPosition(x, y, xInit, yInit, xThumb, yThumb, xShift, yShift):
+    x = x-xShift
+    y = y-yShift
+    return int(x*xInit/xThumb), int(y*yInit/yThumb)
