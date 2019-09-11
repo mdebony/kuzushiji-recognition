@@ -1,26 +1,43 @@
 from PIL import Image
 import numpy as np
 
-def makeSquareImage(im, minSize=32, fill_color=(255, 255, 255)):
+def makeSquareImage(im, minSize=32, fill_color=(255, 255, 255), shiftData=False):
     x, y = im.size
     size = max(max(x, y), minSize)
     new_im = Image.new('RGB', (size, size), fill_color)
     new_im.paste(im, (int((size - x) / 2), int((size - y) / 2)))
+    
+    if shiftData:
+        return new_im, (int((size - x) / 2), int((size - y) / 2))
     return new_im
 
-def convertImage(image, xpixel=1024, ypixel=1024, gray=False, squared=True):
+def convertImage(image, xpixel=1024, ypixel=1024, gray=False, squared=True, conversionData=False):
     #convert size
+    convData={}
+    x, y = im.size
+    convData['init_x']=x
+    convData['init_y']=y
     image.thumbnail([xpixel, ypixel], Image.LANCZOS)
+    x, y = im.size
+    convData['thumb_x']=x
+    convData['thumb_y']=y
     image.convert('RGB')
     
     #make square
     if squared:
-        image = makeSquareImage(image, minSize=max(xpixel, ypixel), fill_color=(255,255,255))
+        if conversionData:
+            image, shift = makeSquareImage(image, minSize=max(xpixel, ypixel), fill_color=(255,255,255), shiftData=conversionData)
+            convData['shift_x']=shift[0]
+            convData['shift_y']=shift[1]
+        else:
+            image = makeSquareImage(image, minSize=max(xpixel, ypixel), fill_color=(255,255,255), shiftData=conversionData)
     
     #convert color
     if gray:
         image.convert('L')
-        
+    
+    if conversionData:
+        return image, convData
     return image
 
 def extractSImageFromImage(image, pos, size, finalSize=(32,32), gray=False):
