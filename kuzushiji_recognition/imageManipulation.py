@@ -48,3 +48,12 @@ def conversionToInitialPosition(x, y, xInit, yInit, xThumb, yThumb, xShift, yShi
     x = x-xShift
     y = y-yShift
     return int(x*xInit/xThumb), int(y*yInit/yThumb)
+
+def createSegmentationMap(xSize, ySize, listPos):
+    segMap = np.zeros((xSize, ySize), dtype=np.uint8)
+    
+    for i in range(len(listPos)):
+        segMap[listPos[i][0]:(listPos[i][0]+listPos[i][2])
+               listPos[i][1]:(listPos[i][1]+listPos[i][3])] = 255
+    
+     return segMap
