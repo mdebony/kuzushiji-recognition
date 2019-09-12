@@ -47,7 +47,16 @@ def extractSImageFromImage(image, pos, size, finalSize=(32,32), gray=False):
 def conversionToInitialPosition(x, y, xInit, yInit, xThumb, yThumb, xShift, yShift):
     x = x-xShift
     y = y-yShift
-    return int(x*xInit/xThumb), int(y*yInit/yThumb)
+    x = int(x*xInit/xThumb)
+    y = int(y*yInit/yThumb)
+    return x, y
+
+def conversionToThumbPosition(x, y, xInit, yInit, xThumb, yThumb, xShift, yShift):
+    x = int(x*xThumb/xInit)
+    y = int(y*yThumb/yInit)
+    x = x+xShift
+    y = y+yShift
+    return x, y
 
 def createSegmentationMap(xSize, ySize, listPos):
     segMap = np.zeros((xSize, ySize), dtype=np.uint8)
