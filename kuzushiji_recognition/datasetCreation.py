@@ -33,6 +33,15 @@ def fromPageCreateCaracterDataset(image, label, unicodeData):
     return caracList, imageCaracList
 
 
+def loadImageCaracterEmplacement(importFile, folder, caracterEmplacementRes = (1024, 1024), caracacterEmplacementIsGrey=True):
+    
+    pass
+
+def loadImageCaracterRecognition(databaseCaracter, folder, caracterRecognitionRes = (32, 32), caracterRecognitionIsGrey = True):
+    
+    pass
+
+
 def createDatasetFirstNetwork(xpixel=1024, ypixel=1024, gray=False):
     nImage = trainData.shape[0]
     
