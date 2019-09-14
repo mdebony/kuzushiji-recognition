@@ -66,3 +66,8 @@ def createSegmentationMap(xSize, ySize, charaDB):
                charaDB.iloc[i]['position'][1]:(charaDB.iloc[i]['position'][1]+charaDB.iloc[i]['size'][1])] = 255
     
     return segMap
+
+def separateDatabase(charaDB):
+    charaDB1 = charaDB.iloc[0::2]
+    charaDB2 = charaDB.iloc[1::2]
+    return charaDB1, charaDB2
