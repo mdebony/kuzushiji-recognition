@@ -17,11 +17,14 @@ def determineEmplacement(segmentationMap, threshold = 0.5):
     return caracterPosition
 
 
-def createFinalFile(database, outputFile):
+def createFinalFile(database, outputFile, unicodeFile):
     
     pass
 
-
-def createLabel(databaseCaracter):
+def createLabel(databaseCaracter, unicodeFile):
     
     pass #return a string corresponding to the label format of the output
+
+def rencodeCaracter(value, unicodeDatabase):
+    
+    return unicodeDatabase['Unicode'].iloc[value]
