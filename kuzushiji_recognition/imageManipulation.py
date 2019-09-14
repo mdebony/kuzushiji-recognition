@@ -61,8 +61,8 @@ def conversionToThumbPosition(x, y, xInit, yInit, xThumb, yThumb, xShift, yShift
 def createSegmentationMap(xSize, ySize, charaDB):
     segMap = np.zeros((xSize, ySize), dtype=np.uint8)
     
-    for i in range(len(listPos)):
-        segMap[listPos.iloc[i]['position'][0]:(listPos.iloc[i]['position'][0]+listPos.iloc[i]['size'][0]),
-               listPos.iloc[i]['position'][1]:(listPos.iloc[i]['position'][1]+listPos.iloc[i]['size'][1])] = 255
+    for i in range(len(charaDB)):
+        segMap[charaDB.iloc[i]['position'][0]:(charaDB.iloc[i]['position'][0]+charaDB.iloc[i]['size'][0]),
+               charaDB.iloc[i]['position'][1]:(charaDB.iloc[i]['position'][1]+charaDB.iloc[i]['size'][1])] = 255
     
     return segMap
