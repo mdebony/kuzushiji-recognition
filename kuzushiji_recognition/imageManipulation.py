@@ -14,11 +14,11 @@ def makeSquareImage(im, minSize=32, fill_color=(255, 255, 255), shiftData=False)
 def convertImage(image, xpixel=1024, ypixel=1024, gray=False, squared=True, squared_fill_color=(255, 255, 255), conversionData=False):
     #convert size
     convData={}
-    x, y = im.size
+    x, y = image.size
     convData['init_x']=x
     convData['init_y']=y
     image.thumbnail([xpixel, ypixel], Image.LANCZOS)
-    x, y = im.size
+    x, y = image.size
     convData['thumb_x']=x
     convData['thumb_y']=y
     image.convert('RGB')
