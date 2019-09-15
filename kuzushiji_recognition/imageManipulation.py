@@ -74,10 +74,7 @@ def separateDatabase(charaDB):
 
 def testSegMap(segMapTot, segMap1, segMap2):
     temp = segMap1 + segMap2
-    for i in range(len(temp)):
-        for j in range(len(temp[0])):
-            if temp[i][j] > 255:
-                temp[i][j] = 255
+    temp[np.where(temp > 255)] = 255
     if (temp - segMapTot == np.zeros((len(temp), len(temp[0])), dtype=np.uint8)).all():
         print('Segmentation map correctly created')
     else:
