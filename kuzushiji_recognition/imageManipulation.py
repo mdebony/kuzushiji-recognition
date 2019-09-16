@@ -6,7 +6,7 @@ def makeSquareImage(im, minSize=32, fill_color=(255, 255, 255), shiftData=False)
     size = max(max(x, y), minSize)
     new_im = Image.new('RGB', (size, size), fill_color)
     new_im.paste(im, (int((size - x) / 2), int((size - y) / 2)))
-    
+
     if shiftData:
         return new_im, (int((size - x) / 2), int((size - y) / 2))
     return new_im
@@ -22,7 +22,7 @@ def convertImage(image, xpixel=1024, ypixel=1024, gray=False, squared=True, squa
     convData['thumb_x']=x
     convData['thumb_y']=y
     image.convert('RGB')
-    
+
     #make square
     if squared:
         if conversionData:
@@ -31,11 +31,11 @@ def convertImage(image, xpixel=1024, ypixel=1024, gray=False, squared=True, squa
             convData['shift_y']=shift[1]
         else:
             image = makeSquareImage(image, minSize=max(xpixel, ypixel), fill_color=squared_fill_color, shiftData=conversionData)
-    
+
     #convert color
     if gray:
         image.convert('L')
-    
+
     if conversionData:
         return image, convData
     return image
@@ -60,11 +60,21 @@ def conversionToThumbPosition(x, y, xInit, yInit, xThumb, yThumb, xShift, yShift
 
 def createSegmentationMap(xSize, ySize, charaDB):
     segMap = np.zeros((xSize, ySize), dtype=np.uint8)
-    
+
     for i in range(len(charaDB)):
         segMap[charaDB.iloc[i]['position'][0]:(charaDB.iloc[i]['position'][0]+charaDB.iloc[i]['size'][0]),
                charaDB.iloc[i]['position'][1]:(charaDB.iloc[i]['position'][1]+charaDB.iloc[i]['size'][1])] = 255
+
+    return segMap
+
+def createSegmentationCenterMap(xSize, ySize, charaDB):
+    segMap = np.zeros((xSize, ySize), dtype=np.uint8)
     
+    for i in range(len(charaDB)):
+        xCenter = int(float(charaDB.iloc[i]['position'][0])+(charaDB.iloc[i]['size'][0])/2.)
+        yCenter = int(float(charaDB.iloc[i]['position'][1])+(charaDB.iloc[i]['size'][1])/2.)
+        segMap[xCenter, yCenter] = 255
+
     return segMap
 
 def separateDatabase(charaDB):
