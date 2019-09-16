@@ -67,13 +67,16 @@ def createSegmentationMap(xSize, ySize, charaDB):
 
     return segMap
 
-def createSegmentationCenterMap(xSize, ySize, charaDB):
+def createSegmentationCenterMap(xSize, ySize, charaDB, sizeCenter=(3,3)):
     segMap = np.zeros((xSize, ySize), dtype=np.uint8)
-    
+    xDown = sizeCenter[0]//2
+    xUp = sizeCenter[0]//2 + sizeCenter[0] % 2
+    yDown = sizeCenter[1]//2
+    yUp = sizeCenter[1]//2 + sizeCenter[1] % 2
     for i in range(len(charaDB)):
         xCenter = int(float(charaDB.iloc[i]['position'][0])+(charaDB.iloc[i]['size'][0])/2.)
         yCenter = int(float(charaDB.iloc[i]['position'][1])+(charaDB.iloc[i]['size'][1])/2.)
-        segMap[xCenter, yCenter] = 255
+        segMap[(xCenter-xDown):(xCenter+xUp), (yCenter-yDown):(yCenter+yUp)] = 255
 
     return segMap
 
