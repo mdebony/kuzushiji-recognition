@@ -11,7 +11,7 @@ def makeSquareImage(im, minSize=32, fill_color=(255, 255, 255), shiftData=False)
         return new_im, (int((size - x) / 2), int((size - y) / 2))
     return new_im
 
-def convertImage(image, xpixel=1024, ypixel=1024, gray=False, squared=True, squared_fill_color=(0, 0, 0), conversionData=False):
+def convertImage(image, xpixel=1024, ypixel=1024, gray=False, squared=True, squared_fill_color=(255, 255, 255), conversionData=False):
     #convert size
     convData={}
     x, y = image.size
