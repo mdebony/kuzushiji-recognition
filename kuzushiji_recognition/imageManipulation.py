@@ -11,13 +11,13 @@ def makeSquareImage(im, minSize=32, fill_color=(255, 255, 255), shiftData=False)
         return new_im, (int((size - x) / 2), int((size - y) / 2))
     return new_im
 
-def convertImage(image, xpixel=1024, ypixel=1024, gray=False, squared=True, squared_fill_color=(255, 255, 255), conversionData=False):
+def convertImage(image, xpixel=1024, ypixel=1024, gray=False, squared=True, squared_fill_color=(255, 255, 255), conversionData=False, algorithmDownscale=Image.LANCZOS):
     #convert size
     convData={}
     x, y = image.size
     convData['init_x']=x
     convData['init_y']=y
-    image.thumbnail([xpixel, ypixel], Image.LANCZOS)
+    image.thumbnail([xpixel, ypixel], algorithmDownscale)
     x, y = image.size
     convData['thumb_x']=x
     convData['thumb_y']=y
