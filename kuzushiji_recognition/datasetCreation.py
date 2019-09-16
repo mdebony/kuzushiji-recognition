@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from PIL import Image
-from .imageManipulation import convertImage, extractSImageFromImage
+from .imageManipulation import *
 from tqdm import tqdm
 
 def createCaracDatabase(label, unicodeData):
@@ -42,17 +42,33 @@ def loadImageCaracterRecognition(databaseCaracter, folder, caracterRecognitionRe
     pass
 
 
-def createDatasetFirstNetwork(xpixel=1024, ypixel=1024, gray=False):
-    nImage = trainData.shape[0]
+def createDatasetFirstNetwork(inputFile, outputFile, unicodeData, imageRep='../data/train_images/', xpixel=1024, ypixel=1024, gray=True):
+    data = pd.read_csv(inputFile)
+#    unicodeData = pd.read_csv(unicodeFile)
     
-    i=0
-    print('Convert train image')
-    print('\n')
-    for idImage in trainData['image_id']:
-        i+=1
-        image = Image.open(dataRep+'train_images/'+idImage+'.jpg')
-        image = convertImage(image,xpixel, ypixel, gray)
-        image.save(datasetRep+'train/'+idImage+'.jpg')
+    nbImage = data.shape[0]
+    segMaps = np.zeros((nbImage, xpixel, ypixel, 2), dtype=np.uint8)
+    cImages = np.zeros((nbImage, xpixel, ypixel, 3), dtype=np.uint8)
+    
+    print('Creating segmentation maps and converting train images', flush = True)
+    for j in tqdm(range(0, nbImage)):
+        idImage = data['image_id'].iloc[j]
+        label = data['labels'].iloc[j]
+        Im = Image.open(imageRep + idImage + '.jpg')
+        xIm, yIm = Im.size
+        dB = createCaracDatabase(label, unicodeData)
+        segMap = createSegmentationMap(xIm, yIm, dB)
+        segMapCenter = createSegmentationCenterMap(xIm, yIm, dB, (7,7))
+        cSegMap = convertImage(Image.fromarray(segMap), xpixel, ypixel, gray=True, squared=True, squared_fill_color=(0, 0, 0))
+        cSegMapCenter = convertImage(Image.fromarray(segMapCenter), xpixel, ypixel, gray=True, squared=True, squared_fill_color=(0, 0, 0), algorithmDownscale=Image.NEAREST)
+        cSegMap = (np.sum(np.array(cSegMap), axis=2)/3.).astype(np.uint8)
+        cSegMapCenter = (np.sum(np.array(cSegMapCenter), axis=2)/3.).astype(np.uint8)
+        cSegMaps = np.swapaxes(np.array([cSegMap,cSegMapCenter],dtype=np.uint8), 0, 2)
+        segMaps[j] = cSegMaps
+        cImages[j] = convertImage(Im, xpixel, ypixel, gray=True, squared=True)
+        
+    np.savez_compressed(outputFile, maps = segMaps, compressed_images = cImages)
+    
         
 
 def createDatasetSecondNetwork(inputFile, outputFile, imageRep='../data/train_images/', unicodeFile = '../data/unicode_translation.csv'):
