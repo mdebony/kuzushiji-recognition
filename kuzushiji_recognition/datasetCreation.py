@@ -48,7 +48,7 @@ def createDatasetFirstNetwork(inputFile, outputFile, unicodeData, imageRep='../d
     
     nbImage = data.shape[0]
     segMaps = np.zeros((nbImage, xpixel, ypixel, 2), dtype=np.uint8)
-    cImages = np.zeros((nbImage, xpixel, ypixel, 3), dtype=np.uint8)
+    cImages = np.zeros((nbImage, xpixel, ypixel, 1), dtype=np.uint8)
     
     print('Creating segmentation maps and converting train images', flush = True)
     for j in tqdm(range(0, nbImage)):
@@ -65,7 +65,7 @@ def createDatasetFirstNetwork(inputFile, outputFile, unicodeData, imageRep='../d
         cSegMapCenter = (np.sum(np.array(cSegMapCenter), axis=2)/3.).astype(np.uint8)
         cSegMaps = np.swapaxes(np.array([cSegMap,cSegMapCenter],dtype=np.uint8), 0, 2)
         segMaps[j] = cSegMaps
-        cImages[j] = convertImage(Im, xpixel, ypixel, gray=True, squared=True)
+        cImages[j,:,:,0] = (np.sum(np.asarray(convertImage(Im, xpixel, ypixel, gray=True, squared=True), dtype=np.uint8), axis=2)/3.).astype(np.uint8)
         
     np.savez_compressed(outputFile, maps = segMaps, compressed_images = cImages)
     
