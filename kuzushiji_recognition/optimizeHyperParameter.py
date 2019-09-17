@@ -1,9 +1,10 @@
 import os
 import random
+import numpy as np
 
 def testHyperParameter(func, filenameModel, resultsFile, testParam, testedParam, historicLoss, historicParam, parameterName, boundValue):
+    change = False
     if (all([boundValue[i][0] <= testParam[i] <= boundValue[i][1] for i in range(len(testParam))])) and not testedParam[tuple(testParam)]:
-        change = False
         try:
             print("Test param set", testParam)
             testLoss = func('temp.h5', *testParam)
@@ -26,11 +27,11 @@ def testHyperParameter(func, filenameModel, resultsFile, testParam, testedParam,
                             parameterName=np.asarray(parameterName),
                             boundValue=np.asarray(boundValue))
         
-        return change, testedParam, historicParam, historicLoss
+    return change, testedParam, historicParam, historicLoss
 
 
 
-def optimizeHyperParameter(func, filenameModel, resultsFile, intialValue = [5, 8, 7, 8], boundValue=[[0,20],[0,10],[2,10],[2,10]], parameterName=['dropout', 'batchsize', 'convolution', 'dense'], step=1, maxIter=30, testRandom=True):
+def optimizeHyperParameter(func, filenameModel, resultsFile, initialValue = None, boundValue=None, parameterName=None, step=1, maxIter=30, testRandom=True):
 
     #Load data if exist
     startPointTested = False
