@@ -1,5 +1,6 @@
 import os
 import random
+import gc
 import numpy as np
 
 def testHyperParameter(func, filenameModel, resultsFile, testParam, testedParam, historicLoss, historicParam, parameterName, boundValue):
@@ -79,11 +80,13 @@ def optimizeHyperParameter(func, filenameModel, resultsFile, initialValue = None
             testParam[j] -= step[j]
             change, testedParam, historicParam, historicLoss = testHyperParameter(func, filenameModel, resultsFile, testParam, testedParam, historicLoss, historicParam, parameterName, boundValue)
             stop = (stop and not change)
+            gc.collect()
             
             #Test up
             testParam[j] += 2*step[j]
             change, testedParam, historicParam, historicLoss = testHyperParameter(func, filenameModel, resultsFile, testParam, testedParam, historicLoss, historicParam, parameterName, boundValue)
             stop = (stop and not change)
+            gc.collect()
             
         #Generate a random paramset and test it
         if testRandom:
@@ -93,6 +96,7 @@ def optimizeHyperParameter(func, filenameModel, resultsFile, initialValue = None
             
             change, testedParam, historicParam, historicLoss = testHyperParameter(func, filenameModel, resultsFile, testParam, testedParam, historicLoss, historicParam, parameterName, boundValue)
             stop = (stop and not change)
+            gc.collect()
             
 
     print('\n\n\nFinal param set :')
