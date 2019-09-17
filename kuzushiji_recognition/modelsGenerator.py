@@ -27,7 +27,7 @@ def trainAndEvaluateModel(model, filenameModel, batchSize, inputData, outputData
 
     return test_loss
 
-def createKMNISTModel1(inputShape, outputLenght, dropoutRate, convLayer, denseLayer, kernelSize = (3,3), finalActivationFunction = 'softmax'):
+def createKMNISTModel1(inputShape, outputLength, dropoutRate, convLayer, denseLayer, kernelSize = (3,3), finalActivationFunction = 'softmax'):
     
     model = keras.models.Sequential()
     model.add(keras.layers.Conv2D(convLayer, kernelSize, activation='relu', input_shape=inputShape))
@@ -46,8 +46,8 @@ def createKMNISTModel1(inputShape, outputLenght, dropoutRate, convLayer, denseLa
     
     return model
 
-def createModelUNet(dropoutRate, convLayer, denseLayer):
-    inputs = Input(, name='input')
+def createModelUNet(inputs, dropoutRate, convLayer, denseLayer):
+    inputs = Input(inputs.shape, name='input')
     #1st Stage
     conv1a = Conv2D(convLayer, (3, 3), activation='relu', name='conv1a')(inputs)
     drop1a = SpatialDropout2D(dropoutRate, name='drop1a')(conv1a)
