@@ -32,7 +32,7 @@ def analyseDocument(importFile, outputFile, folderImage, unicodeFile, modelCarac
     print("Load caracter dataset")
     imageDataset = loadImageCaracterRecognition(database, folderImage,
                                                 caracterRecognitionRes = modelCaracterRecognition,
-                                                caracterRecognitionIsGrey = caracterRecognitionIsGrey):
+                                                caracterRecognitionIsGrey = caracterRecognitionIsGrey)
     imageDataset = (imageDataset/255).astype(np.float16)
     
     print("Predict caracter")
@@ -45,7 +45,7 @@ def analyseDocument(importFile, outputFile, folderImage, unicodeFile, modelCarac
     createFinalFile(database, outputFile, unicodeFile)
     
     
-def createEmplacementDatabase(segmentationMaps, threshold = 0.5)
+def createEmplacementDatabase(segmentationMaps, threshold = 0.5):
 
     pass
 
