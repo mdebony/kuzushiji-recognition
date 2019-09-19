@@ -84,7 +84,7 @@ def createModelUNet(inputShape, dropoutRate, convLayer):
     drop5b = keras.layers.SpatialDropout2D(dropoutRate, name='drop5b')(conv5b)
     
     #6th Stage
-    up6 = keras.layers.Conv2DTranspose(convLayer*8, (3, 3), activation='relu', padding = 'same', name='conv6a')(keras.layers.UpSampling2D(size = (2,2))(drop5b))    
+    up6 = keras.layers.Conv2DTranspose(convLayer*8, (3, 3), strides=(2, 2), activation='relu', padding = 'same', name='conv6a')(drop5b)    
     merge6 = keras.layers.concatenate([drop4b, up6], axis=3, name='merge6')
     conv6b = keras.layers.Conv2D(convLayer*8, (3, 3), activation='relu', padding = 'same', name='conv6b')(merge6)
     drop6b = keras.layers.SpatialDropout2D(dropoutRate, name='drop6b')(conv6b)
@@ -92,7 +92,7 @@ def createModelUNet(inputShape, dropoutRate, convLayer):
     drop6c = keras.layers.SpatialDropout2D(dropoutRate, name='drop6c')(conv6c)
 
     #7th Stage
-    up7 = keras.layers.Conv2DTranspose(convLayer*4, (3, 3), activation='relu', padding = 'same', name='conv7a')(keras.layers.UpSampling2D(size = (2,2))(drop6c)) 
+    up7 = keras.layers.Conv2DTranspose(convLayer*4, (3, 3), strides=(2, 2), activation='relu', padding = 'same', name='conv7a')(drop6c) 
     merge7 = keras.layers.concatenate([drop3b, up7], axis=3, name='merge7')
     conv7b = keras.layers.Conv2D(convLayer*4, (3, 3), activation='relu', padding = 'same', name='conv7b')(merge7)
     drop7b = keras.layers.SpatialDropout2D(dropoutRate, name='drop7b')(conv7b)
@@ -100,7 +100,7 @@ def createModelUNet(inputShape, dropoutRate, convLayer):
     drop7c = keras.layers.SpatialDropout2D(dropoutRate, name='drop7c')(conv7c)
     
     #8th Stage
-    up8 = keras.layers.Conv2DTranspose(convLayer*2, (3, 3), activation='relu', padding = 'same', name='conv8a')(keras.layers.UpSampling2D(size = (2,2))(drop7c)) 
+    up8 = keras.layers.Conv2DTranspose(convLayer*2, (3, 3), strides=(2, 2), activation='relu', padding = 'same', name='conv8a')(drop7c) 
     merge8 = keras.layers.concatenate([drop2b, up8], axis=3, name='merge8')
     conv8b = keras.layers.Conv2D(convLayer*2, (3, 3), activation='relu', padding = 'same', name='conv8b')(merge8)
     drop8b = keras.layers.SpatialDropout2D(dropoutRate, name='drop8b')(conv8b)
@@ -108,7 +108,7 @@ def createModelUNet(inputShape, dropoutRate, convLayer):
     drop8c = keras.layers.SpatialDropout2D(dropoutRate, name='drop8c')(conv8c)
     
     #9th Stage
-    up9 = keras.layers.Conv2DTranspose(convLayer, (3, 3), activation='relu', padding = 'same', name='conv9a')(keras.layers.UpSampling2D(size = (2,2))(drop8c)) 
+    up9 = keras.layers.Conv2DTranspose(convLayer, (3, 3), strides=(2, 2), activation='relu', padding = 'same', name='conv9a')(drop8c) 
     merge9 = keras.layers.concatenate([drop1b, up9], axis=3, name='merge9')
     conv9b = keras.layers.Conv2D(convLayer, (3, 3), activation='relu', padding = 'same', name='conv9b')(merge9)
     drop9b = keras.layers.SpatialDropout2D(dropoutRate, name='drop9b')(conv9b)
@@ -116,7 +116,7 @@ def createModelUNet(inputShape, dropoutRate, convLayer):
     drop9c = keras.layers.SpatialDropout2D(dropoutRate, name='drop9c')(conv9c)
     
     #10th Stage
-    conv10 = keras.layers.Conv2D(convLayer, (3, 3), activation='relu', padding = 'same', name='conv10')(keras.layers.UpSampling2D(size = (2,2))(drop9c))
+    conv10 = keras.layers.Conv2D(2, (3, 3), activation='relu', padding = 'same', name='conv10')(drop9c)
     
     model = keras.models.Model(inputLayer, conv10)
     
